@@ -8,7 +8,9 @@
 #include <utility>
 #include <vector>
 #include <bits/stdc++.h>
+#include "nlohmann/json.hpp"
 #include "storage/JsonFoodRepository.hpp"
+#include "storage/FoodRepository.hpp"
 #include "utils/Result.hpp"
 #include "utils/HttpClient.hpp"
 #include "clients/OpenFoodFactsClient.hpp"
@@ -103,7 +105,7 @@ int main()
     curl_global_cleanup();
     // at the end always cleanup with this function .
     // #######################################################
-    std::string searched_item{"eggs"};
+    std::string searched_item{"milk"};
     std::cout<<"search for "<<searched_item<<std::endl;
     cc::clients::OpenFoodFactsClient openfoodfactsclient{}; 
     auto result = openfoodfactsclient.searchByName(searched_item.c_str());
@@ -120,11 +122,37 @@ int main()
                 std::cout<<n.name()<<" : "<<n.value()<<" "<<n.unit()<<std::endl;
             }
         }
-
     }
 
+    /// ##############################
+    /// 
+
+    std::string barcode{"737628064502"};
+    std::cout<<"#########################"<<std::endl;
+    std::cout<<"TEST barcode"<<std::endl;
+    std::cout<<"#########################"<<std::endl;
+    auto result_barcode = openfoodfactsclient.getByBarcode(barcode);
+    
+    cc::models::Food food_barcode;
+    if(result_barcode){
+      food_barcode = result_barcode.unwrap(); 
+            if(food_barcode.nutrients().empty()){
+                std::cout<<"nutrients is empty"<<std::endl;
+            }
+            for(auto n:food_barcode.nutrients()){
+                std::cout<<n.name()<<" : "<<n.value()<<" "<<n.unit()<<std::endl;
+            }
+    }
+
+    // ############ json save ####################################
+    
+    cc::storage::JsonFoodRepository jsonFoodRepository("/home/anas/personal_projects/calorie-counter-backend/json_data_base.json");
+    jsonFoodRepository.save(food_barcode);
 
 
+    // ############ get by id from data base(json for now ) ##########
+    std::cout<<"testing get by id from data base (json for now )"<<std::endl;
+    jsonFoodRepository.getById("0737628064502");
     // ################################# test result #############
     auto r1 = cc::utils::Result<int>::ok(123);
     if (r1)

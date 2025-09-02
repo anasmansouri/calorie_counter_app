@@ -1,49 +1,70 @@
 #include "JsonFoodRepository.hpp"
+#include "models/food.hpp"
+#include "nlohmann/json.hpp"
 #include "utils/Result.hpp"
+#include <fstream>
+#include <iostream>
+
+#include <iterator>
 #include <optional>
-using json= nlohmann::json;
+#include <ostream>
+#include <vector>
+using json = nlohmann::json;
 
-namespace cc::storage {
-JsonFoodRepository::JsonFoodRepository(std::string filePath):filePath_{filePath}{}
-// cc::utils::Result<void> JsonFoodRepository::save(const cc::models::Food& food);
-   cc::utils::Result<std::optional<cc::models::Food>> getById(const std::string& id) {return  cc::utils::Result<std::optional<cc::models::Food>>::ok(std::nullopt);}
-   cc::utils::Result<std::optional<cc::models::Food>> getByBarcode(const std::string& barcode) {return  cc::utils::Result<std::optional<cc::models::Food>>::ok(std::nullopt);}
-   cc::utils::Result<std::vector<cc::models::Food>> list(int offset = 0, int limit = 50) {cc::utils::Result<std::optional<cc::models::Food>>::ok(std::nullopt); }
-   cc::utils::Result<void> remove(const std::string& id){cc::utils::Result<std::optional<cc::models::Food>>::ok(std::nullopt);} 
+namespace cc::storage
+{
+  JsonFoodRepository::JsonFoodRepository(std::string filePath) : filePath_{filePath} {}
+  cc::utils::Result<void> JsonFoodRepository::save(const cc::models::Food& food){
+      std::ofstream file(this->filePath_);
+      if(!file.is_open()){
+          std::cerr<<"can't open file"<<std::endl;
+          return cc::utils::Result<void>::fail(cc::utils::ErrorCode::NotFound, "can't open file");
+      }
+      nlohmann::json j = food;
+      file <<j.dump(4);
+      file.close();
+      return cc::utils::Result<void>::ok();
+  }
 
+  cc::utils::Result<cc::models::Food> JsonFoodRepository::getById(const std::string &id) { 
+      nlohmann::json j;
+      std::ifstream file(this->filePath_);
+      if(!file.is_open()){
+          std::cerr<<"can't open file"<<std::endl;
+          return cc::utils::Result<cc::models::Food>::fail(cc::utils::ErrorCode::NotFound, "can't open file");
+      }
+      try {
+         file>>j;   
+      } catch (const nlohmann::json::parse_error &e) {
+          std::cerr<<"parse error"<<e.what()<<std::endl;
+          return cc::utils::Result<cc::models::Food>::fail(cc::utils::ErrorCode::ParseError, e.what());
+      }
+      std::cout<<j.dump(4)<<std::endl;
+      std::cout<<"founded id :"<<j["id"]<<"  ||| searched id "<<id<<std::endl;
+      if(j["id"]==id){
+          std::cout<<"item founded"<<std::endl;
+      }
+      return cc::utils::Result<cc::models::Food>::ok(cc::models::Food());
+  }
 
+  cc::utils::Result<cc::models::Food> JsonFoodRepository::getByBarcode(const std::string &barcode) { 
+      return cc::utils::Result<cc::models::Food>::ok(cc::models::Food()); 
+  }
 
-/*
-private:
-    std::string id_;
-    std::string name_;
-    double totalKcal_{0.0};
-    double caloriesPer100g_{0.0};
-    std::vector<Nutrient> nutrients_;
-    std::optional<double> servingSizeG_;
-    std::optional<std::string> barcode_;
-    std::optional<std::string> brand_;
-    std::optional<std::string> imageUrl_;
-    std::string source_{"manual"};
-};// Food
-  */
- 
-// class JsonFoodRepository : public FoodRepository {
-// public:
-  // explicit JsonFoodRepository(std::string filePath);
+  cc::utils::Result<std::vector<cc::models::Food>> JsonFoodRepository::list(int offset, int limit ) {
+      return cc::utils::Result<std::vector<cc::models::Food>>::ok(std::vector<cc::models::Food>{}); 
+  }
 
-  // cc::utils::Result<void> save(const cc::models::Food& food) override;
-  // cc::utils::Result<std::optional<cc::models::Food>> getById(const std::string& id) override;
-  // cc::utils::Result<std::optional<cc::models::Food>> getByBarcode(const std::string& barcode) override;
-  // cc::utils::Result<std::vector<cc::models::Food>> list(int offset = 0, int limit = 50) override;
-  // cc::utils::Result<void> remove(const std::string& id) override;
+  cc::utils::Result<void> JsonFoodRepository::remove(const std::string &id) { 
+      return cc::utils::Result<void>::ok();
+  }
 
-  // void setFlushOnWrite(bool enable);
-
-// private:
-  // std::string filePath_;
-  // bool flushOnWrite_ = true;
-  // mutable std::mutex mtx_;
-// };
-
+   // update or insert if doesn't exist 
+  cc::utils::Result<void> JsonFoodRepository::upsert(const cc::models::Food& food){
+      return cc::utils::Result<void>::ok();
+  }
+  // clear all records 
+  cc::utils::Result<void> JsonFoodRepository::clear(){
+      return cc::utils::Result<void>::ok();
+  }
 } // namespace cc::storage
