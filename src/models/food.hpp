@@ -7,10 +7,6 @@
 #include <nlohmann/json.hpp>
 namespace cc::models{
 
-
-// TODO: declare your classes/functions here
-
-
 // Represents a single food item 
 class Food{
 public:
@@ -24,6 +20,8 @@ public:
             std::optional<std::string> brand_,
             std::optional<std::string> imageUrl_);
 
+
+  std::string to_string()const;
       // IDs & identity
   const std::string& id() const;
   void setId(std::string id);

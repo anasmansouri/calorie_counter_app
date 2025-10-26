@@ -1,30 +1,38 @@
 #pragma once
 #include <iostream>
 #include <nlohmann/json.hpp>
-
+#include <string>
+#include<format>
 namespace cc::models{
-// TODO: declare your classes/functions here
-//
 // Represents one nutrient 
 // protein , Carbs , Fat
+//
+/*enum class NUTRIENT_NAME{
+  Protein,
+  Carbs,
+  Fat
+}; // enum::NUTRIENT_NAME
+   */
 class Nutrient{
  private:
-    std::string name_; // Protein , Carbs , Fat maybe create enum later
+    std::string name_; // Protein , Carbs , Fat
     double value_{0.0}; // per 100g basis
-    std::string unit_; //eg. "g", "mg"
+    std::string unit_{"g"}; //eg. "g", "mg"
 
  public:
    // constructors 
-    Nutrient(std::string name,double value, std::string unit);
+    Nutrient(std::string name,double value, std::string unit="g");
     Nutrient()=default;
     // getters 
     const std::string& name() const;
     const std::string& unit() const;
+    double  value() const;
     // setters 
     void setName(std::string n);
     void setValue(double v);
     void setUnit(std::string u);
-    double value() const;
+    // to string 
+    std::string to_string()const;
 
 };// Nutrient
  // Nutrient serializer  

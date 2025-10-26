@@ -22,7 +22,8 @@ add_library(cc_clients
 
 # libcurl library 
 find_package(CURL REQUIRED)
-target_include_directories(cc_clients PRIVATE ${CURL_INCLUDE_DIRS})
+#target_include_directories(cc_clients PRIVATE ${CURL_INCLUDE_DIRS})
+target_link_libraries(cc_clients PRIVATE ${CURL_LIBRARIES})
 
 target_include_directories(cc_clients PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(cc_clients PRIVATE cc_utils)
@@ -54,5 +55,6 @@ target_link_libraries(cc_api PUBLIC cc_services cc_utils)
 
 # Main executable
 add_executable(cc_app main.cpp)
-target_link_libraries(cc_app PRIVATE cc_api ${CURL_LIBRARIES})
+#target_link_libraries(cc_app PRIVATE cc_api ${CURL_LIBRARIES})
+target_link_libraries(cc_app PRIVATE cc_api)
 #target_link_libraries(cc_app PRIVATE cc_models)

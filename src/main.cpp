@@ -28,39 +28,39 @@ int main()
     // std::cout<<"food :"<<f.name()<<std::endl;
     // #################################################
     // 1) Build some nutrients
-    cc::models::Nutrient protein{"protein", 10.2, "g"}; // per 100g
-    cc::models::Nutrient fat{"fat", 5.8, "g"};
-    cc::models::Nutrient carbs{"carbohydrates", 42.0, "g"};
-    cc::models::Nutrient sugar{"sugars", 12.0, "g"};
-    cc::models::Nutrient salt{"salt", 0.8, "g"};
+    //cc::models::Nutrient protein{"protein", 10.2, "g"}; // per 100g
+    //cc::models::Nutrient fat{"fat", 5.8, "g"};
+    //cc::models::Nutrient carbs{"carbohydrates", 42.0, "g"};
 
     // 2) Build a Food
-    cc::models::Food f;
-    f.setId("test-uuid-1234");
-    f.setName("Granola Bar");
-    f.setBrand(std::string("FooBrand"));
-    f.setBarcode(std::string("7622210449283"));
-    f.setCaloriesPer100g(420.0);
-    f.setServingSizeG(40.0); // default serving size 40g
-    f.setSource("manual");
-    f.setImageUrl(std::string("https://example.com/granola.jpg"));
+    // cc::models::Food f;
+    // f.setId("test-uuid-1234");
+    // f.setName("Granola Bar");
+    // f.setBrand(std::string("FooBrand"));
+    // f.setBarcode(std::string("7622210449283"));
+    // f.setCaloriesPer100g(420.0);
+    // f.setServingSizeG(40.0); // default serving size 40g
+    // f.setSource("manual");
+    // f.setImageUrl(std::string("https://example.com/granola.jpg"));
 
     // add nutrients (mutable access)
-    std::vector<cc::models::Nutrient> temp_nutrients{protein, fat, carbs, sugar, salt};
-    f.setNutrients(temp_nutrients);
-    std::vector<std::pair<std::string,double>>v;
-    std::pair<std::string,double>pair_anas={f.id(),f.servingSizeG().value()};
-    v.push_back(pair_anas);
-    cc::models::MealLog lunch(cc::models::MEALNAME::Lunch,v);
-    nlohmann::json j = protein; 
-    nlohmann::json food_json = f;
-    nlohmann::json lunch_json = lunch;
+    // std::vector<cc::models::Nutrient> temp_nutrients{protein, fat, carbs};
+    // f.setNutrients(temp_nutrients);
+    // std::vector<std::pair<std::string,double>>v; // items of {foodId, grams}
+    // std::pair<std::string,double>pair_anas={f.id(),f.servingSizeG().value()};
+    // v.push_back(pair_anas);
+    // cc::models::MealLog lunch(cc::models::MEALNAME::Lunch,v);
+    // nlohmann::json nutrient_json = protein; 
+    // nlohmann::json food_json = f;
+    // nlohmann::json lunch_json = lunch;
     // std::cout<<food_json.dump(4)<<std::endl;
-    // std::cout<<food_json.dump(4)<<std::endl;
-    std::cout<<lunch_json.dump(4)<<std::endl;
+    // std::cout<<nutrient_json.dump(4)<<std::endl;
+    // std::cout<<lunch_json.dump(4)<<std::endl;
     //cc::storage::JsonFoodRepository json_repo("~/serialize_food");
     //json_repo.save(f);
     //######################
+    
+    /*
     // you need to initialise always before start the use of httpclient
     if (curl_global_init(CURL_GLOBAL_DEFAULT) != 0) {
         std::cerr << "curl_global_init failed\n";
@@ -103,34 +103,41 @@ int main()
     }
 
     curl_global_cleanup();
+    */ 
     // at the end always cleanup with this function .
     // #######################################################
-    std::string searched_item{"milk"};
-    std::cout<<"search for "<<searched_item<<std::endl;
-    cc::clients::OpenFoodFactsClient openfoodfactsclient{}; 
-    auto result = openfoodfactsclient.searchByName(searched_item.c_str());
-    if(result){
-        auto items = result.unwrap();
-        std::cout<<"numbers for 100g"<<std::endl;
-        for(auto i : items){
-            std::cout<<i.name()<<std::endl;
-            if(i.nutrients().empty()){
-                std::cout<<"nutrients is empty"<<std::endl;
-            }
+    
+    // not implemented yet
+    // std::string searched_item{"milk"};
+    // std::cout<<"search for "<<searched_item<<std::endl;
+    // cc::clients::OpenFoodFactsClient openfoodfactsclient{}; 
+    // auto result = openfoodfactsclient.searchByName(searched_item.c_str());
+    // if(result){
+        // auto items = result.unwrap();
+        // std::cout<<"numbers for 100g"<<std::endl;
+        // for(auto i : items){
+            // std::cout<<i.name()<<std::endl;
+            // if(i.nutrients().empty()){
+                // std::cout<<"nutrients is empty"<<std::endl;
+            // }
           
-            for(auto n:i.nutrients()){
-                std::cout<<n.name()<<" : "<<n.value()<<" "<<n.unit()<<std::endl;
-            }
-        }
-    }
-
+            // for(auto n:i.nutrients()){
+                // std::cout<<n.name()<<" : "<<n.value()<<" "<<n.unit()<<std::endl;
+            // }
+        // }
+    // }
+    
     /// ##############################
     /// 
-
-    std::string barcode{"737628064502"};
+    
+    // std::string barcode{"737628064502"};
+    // perly 
+    // std::string barcode{"8076809543934"};
+    std::string barcode{"6111242100985"};
     std::cout<<"#########################"<<std::endl;
     std::cout<<"TEST barcode"<<std::endl;
     std::cout<<"#########################"<<std::endl;
+    cc::clients::OpenFoodFactsClient openfoodfactsclient{}; 
     auto result_barcode = openfoodfactsclient.getByBarcode(barcode);
     
     cc::models::Food food_barcode;
@@ -139,16 +146,33 @@ int main()
             if(food_barcode.nutrients().empty()){
                 std::cout<<"nutrients is empty"<<std::endl;
             }
+            std::cout<<food_barcode.name()<<std::endl;
             for(auto n:food_barcode.nutrients()){
                 std::cout<<n.name()<<" : "<<n.value()<<" "<<n.unit()<<std::endl;
             }
     }
 
+    std::string barcode_2{"5449000227041"};
+    auto result_barcode_2 = openfoodfactsclient.getByBarcode(barcode_2);
+    cc::models::Food food_barcode_2;
+    if(result_barcode_2){
+      food_barcode_2 = result_barcode_2.unwrap(); 
+            if(food_barcode_2.nutrients().empty()){
+                std::cout<<"nutrients is empty"<<std::endl;
+            }
+            std::cout<<food_barcode_2.name()<<std::endl;
+            for(auto n:food_barcode_2.nutrients()){
+                std::cout<<n.name()<<" : "<<n.value()<<" "<<n.unit()<<std::endl;
+            }
+    }
     // ############ json save ####################################
+    
     
     cc::storage::JsonFoodRepository jsonFoodRepository("/home/anas/personal_projects/calorie-counter-backend/json_data_base.json");
     jsonFoodRepository.save(food_barcode);
+    jsonFoodRepository.save(food_barcode_2);
 
+    /*
 
     // ############ get by id from data base(json for now ) ##########
     std::cout<<"testing get by id from data base (json for now )"<<std::endl;
@@ -169,6 +193,7 @@ int main()
 
     auto r3 = cc::utils::Result<void>::ok();
     auto r4 = cc::utils::Result<void>::fail(cc::utils::ErrorCode::StorageError, "disk full");
+    */
     //////////////////////////////////////////////////////////////////
     return 0;
 }

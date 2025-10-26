@@ -8,7 +8,6 @@
 namespace cc {
 namespace models {
 
-// TODO: declare your classes/functions here
 Food::Food(std::string id_, std::string name_, double caloriesPer100g_,
            std::vector<Nutrient> nutrient_,
            std::optional<double> servingSizeG_,
@@ -19,6 +18,10 @@ Food::Food(std::string id_, std::string name_, double caloriesPer100g_,
       nutrients_{nutrient_}, servingSizeG_{servingSizeG_}, barcode_{barcode_},
       brand_{brand_}, imageUrl_{imageUrl_} {
   std::cout << "Food Created" << std::endl;
+}
+
+std::string Food::to_string()const {
+    return std::format("{} : {} : {}",this->name_,this->id_,this->servingSizeG_.value());
 }
 //Name
 void Food::setName(std::string n) { this->name_ = n; }
@@ -100,6 +103,8 @@ void Food::setSource(std::string s){
 void Food::update_totalKcal(){
       this->totalKcal_=(this->servingSizeG_.value())*(this->caloriesPer100g_);
 }
+
+
 
 } // namespace models
 } // namespace cc

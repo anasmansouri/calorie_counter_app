@@ -11,6 +11,5 @@ public:
   std::string toJson(const cc::models::Food& food) const;
   Result<cc::models::Food> fromJson(const std::string& jsonStr) const;
 };
-
 } // namespace cc::utils
 

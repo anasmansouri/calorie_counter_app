@@ -1,5 +1,6 @@
 #pragma once
 #include "models/meal_log.hpp"
+#include "models/food.hpp"
 #include <string>
 #include <vector>
 #include <utility>
@@ -7,7 +8,7 @@
 
 namespace cc::models {
 
-    MealLog::MealLog(MEALNAME name,std::vector<std::pair<std::string,double>> food_items):food_items_{food_items},name_{name}{}
+    MealLog::MealLog(MEALNAME name,std::vector<std::pair<std::string, double>> food_items):name_{name},food_items_{food_items}{}
     MEALNAME MealLog::getName() const {
         return this->name_;
     }
@@ -20,7 +21,7 @@ namespace cc::models {
         return sum;
     }
 
-     std::vector<std::pair<std::string,double>> MealLog::food_items() const{
+     std::vector<std::pair<std::string, double>> MealLog::food_items() const{
          return this->food_items_;
      }
     // operations 

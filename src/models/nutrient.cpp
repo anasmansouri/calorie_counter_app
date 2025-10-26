@@ -7,7 +7,7 @@ namespace cc {
 namespace models {
 
     Nutrient::Nutrient(std::string name , double value , std::string unit):name_{name},value_{value},unit_{unit}{
-        std::cout<<"Nutrient is created"<<std::endl;
+        std::cout<<"Nutrient "<<name<< " is created"<<std::endl;
     }
 
     // Name
@@ -33,6 +33,10 @@ namespace models {
 
     void Nutrient::setUnit(std::string u){
         this->unit_=u;
+    }
+
+    std::string Nutrient::to_string()const {
+    return std::format("{} : {} : {}",this->name_,this->value_,this->unit_);
     }
 } // namespace models
 } // namespace cc
