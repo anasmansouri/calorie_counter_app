@@ -32,8 +32,25 @@ namespace cc::storage
       return cc::utils::Result<void>::fail(cc::utils::ErrorCode::StorageError, "can't open file");
     }
   }
+  // up to now i don't find any ids in json file , so no need for this for now
   cc::utils::Result<cc::models::Food> JsonFoodRepository::getById(const std::string &id)
   {
+    // std::ifstream infile(this->filePath_);
+    // nlohmann::json file_content;
+    // if (infile.is_open() && infile.peek() != std::ifstream::traits_type::eof())
+    // {
+    // infile >> file_content;
+    // infile.close();
+    // for(auto i : file_content){
+    // if(i["id"].get<std::string>()==id){
+    // return cc::utils::Result<cc::models::Food>::ok(cc::models::Food());
+    // }
+    // }
+    // }
+    // else
+    // {
+    // return cc::utils::Result<cc::models::Food>::fail(cc::utils::ErrorCode::NotFound,"item not found");
+    // }
     return cc::utils::Result<cc::models::Food>::ok(cc::models::Food());
   }
   cc::utils::Result<cc::models::Food> JsonFoodRepository::getByBarcode(const std::string &barcode)

@@ -133,7 +133,8 @@ int main()
     // std::string barcode{"737628064502"};
     // perly 
     // std::string barcode{"8076809543934"};
-    std::string barcode{"6111242100985"};
+    // 6111242100985
+    std::string barcode{"8076809543934"};
     std::cout<<"#########################"<<std::endl;
     std::cout<<"TEST barcode"<<std::endl;
     std::cout<<"#########################"<<std::endl;

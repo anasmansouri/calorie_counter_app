@@ -80,7 +80,7 @@ inline void  to_json(nlohmann::json &j, const cc::models::Food &f){
         {"nutrient",f.nutrients()},
         {"servingSizeG",f.servingSizeG()},
         {"barcode",f.barcode()},
-        {"brand",f.barcode()},
+        {"brand",f.brand()},
         {"imageUrl",f.imageUrl()},
         {"source",f.source()}
        };
