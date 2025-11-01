@@ -5,3 +5,4 @@ rm -r *
 cmake .. 
 make 
 ./bin/cc_app
+#gdb ./bin/cc_app

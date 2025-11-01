@@ -14,6 +14,7 @@
 #include "utils/Result.hpp"
 #include "utils/HttpClient.hpp"
 #include "clients/OpenFoodFactsClient.hpp"
+#include "services/FoodService.hpp"
 int main()
 {
     // TODO: load config, init services, run server
@@ -132,9 +133,9 @@ int main()
 
     // std::string barcode{"737628064502"};
     // perly
-    // std::string barcode{"8076809543934"};
-    // 6111242100985
     std::string barcode{"8076809543934"};
+    // 6111242100985
+    // std::string barcode{"8076809543934"};
     std::cout << "#########################" << std::endl;
     std::cout << "TEST barcode" << std::endl;
     std::cout << "#########################" << std::endl;
@@ -180,7 +181,7 @@ int main()
 
     // ############ get by id from data base(json for now ) ##########
     std::cout << "testing get by id from data base (json for now )" << std::endl;
-    cc::utils::Result<cc::models::Food> founded_food = jsonFoodRepository.getById("5449000227041");
+    cc::utils::Result<cc::models::Food> founded_food = jsonFoodRepository.getById_or_Barcode("8076809543934");
     if (founded_food)
     {
         std::cout << founded_food.unwrap().to_string() << std::endl;
@@ -192,7 +193,7 @@ int main()
 
     // ############ get by id from data base(json for now ) ##########
     std::cout << "testing get by barcode from data base (json for now )" << std::endl;
-    founded_food = jsonFoodRepository.getByBarcode("5449000227041");
+    founded_food = jsonFoodRepository.getById_or_Barcode("5449000227041");
     if (founded_food)
     {
         std::cout << founded_food.unwrap().to_string() << std::endl;
@@ -201,6 +202,87 @@ int main()
     {
         std::cout << founded_food.unwrap_error().message << std::endl;
     }
+    // ############ list ##########
+    std::cout << "testing listing food from database " << std::endl;
+    cc::utils::Result<std::vector<cc::models::Food>> food_items;
+    food_items = jsonFoodRepository.list(0, 40);
+    if (food_items)
+    {
+        std::cout << "food items are found" << std::endl;
+        for (auto item : food_items.unwrap())
+        {
+            std::cout << item.to_string() << std::endl;
+        }
+    }
+    else
+    {
+        std::cout << founded_food.unwrap_error().message << std::endl;
+    }
+
+    // ############ get by id from data base(json for now ) ##########
+    std::cout << "testing remove item from data base" << std::endl;
+    cc::utils::Result<void> r = jsonFoodRepository.remove("5449000227041");
+
+    // ############ update or insert food item ##########
+    std::cout << "testing update or insert" << std::endl;
+    // // 2) Build a Food
+    cc::models::Food f;
+    f.setId("7622210449283");
+    f.setName("Granola Bar");
+    f.setBrand(std::string("FooBrand"));
+    f.setBarcode(std::string("7622210449283"));
+    f.setCaloriesPer100g(420.0);
+    f.setServingSizeG(40.0); // default serving size 40g
+    f.setSource("manual");
+    f.setImageUrl(std::string("https://example.com/granola.jpg"));
+    cc::utils::Result<void> r_update_insert = jsonFoodRepository.upsert(f);
+
+    // ############ item Food Service ##########
+    // ############ getOrFetchByBarcode ##########
+    std::cout << "testing getBy_id_or_Barcode" << std::endl;
+    cc::utils::Result<cc::models::Food> returned_food;
+    cc::services::FoodService f_service(std::make_shared<cc::storage::JsonFoodRepository>("/home/anas/personal_projects/calorie-counter-backend/json_data_base.json"), std::make_shared<cc::clients::OpenFoodFactsClient>());
+    f_service.getOrFetchByBarcode("7622210449283");
+
+    // ############ addManualFood ##########
+    // 2) Build a Food
+
+    std::cout << "testing addManualFood" << std::endl;
+    cc::models::Food new_food;
+    new_food.setId("2131654967498");
+    new_food.setName("minina");
+    new_food.setBrand(std::string("wlad 3icha l3arbi"));
+    new_food.setBarcode(std::string("2131654967498"));
+    new_food.setCaloriesPer100g(420.0);
+    new_food.setServingSizeG(40.0); // default serving size 40g
+    new_food.setSource("manual");
+    new_food.setImageUrl(std::string("https://example.com/granola.jpg"));
+    f_service.addManualFood(new_food);
+    jsonFoodRepository.list();
+
+    // ############ clear ##########
+    // std::cout << "testing clear database " << std::endl;
+    // r = jsonFoodRepository.clear();
+    // if (food_items)
+    // {
+    // std::cout<<"food items are found"<<std::endl;
+    // for(auto item:food_items.unwrap()){
+    // std::cout<<item.to_string()<<std::endl;
+    // }
+    // }
+    // else
+    // {
+    // std::cout << founded_food.unwrap_error().message << std::endl;
+    // }
+
+    // if (r)
+    // {
+    // std::cout << founded_food.unwrap().to_string() << std::endl;
+    // }
+    // else
+    // {
+    // std::cout << founded_food.unwrap_error().message << std::endl;
+    // }
 
     // ################################# test result #############
     // auto r1 = cc::utils::Result<int>::ok(123);

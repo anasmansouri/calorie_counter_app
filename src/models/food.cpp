@@ -17,6 +17,7 @@ Food::Food(std::string id_, std::string name_, double caloriesPer100g_,
     : id_{id_}, name_{name_}, caloriesPer100g_{caloriesPer100g_},
       nutrients_{nutrient_}, servingSizeG_{servingSizeG_}, barcode_{barcode_},
       brand_{brand_}, imageUrl_{imageUrl_} {
+        this->servingSizeG_=0;
   std::cout << "Food Created" << std::endl;
 }
 

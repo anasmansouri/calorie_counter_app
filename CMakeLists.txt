@@ -10,6 +10,11 @@ if (CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
     add_compile_options(-Wall -Wextra -Wpedantic)
 endif()
 
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+set(CMAKE_CXX_FLAGS_DEBUG "-O0 -g3 -fno-omit-frame-pointer -fno-optimize-sibling-calls")
+set(CMAKE_BUILD_TYPE "Debug")
+set(CMAKE_EXPORT_COMPILE_COMMANDS "ON")
+
 # Option to build tests
 option(BUILD_TESTS "Build unit and integration tests" OFF)
 
