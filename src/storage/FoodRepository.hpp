@@ -16,8 +16,7 @@ public:
   virtual ~FoodRepository() = default;
 
   virtual cc::utils::Result<void> save(const cc::models::Food& food) = 0;
-  virtual cc::utils::Result<cc::models::Food> getById(const std::string& id) = 0;
-  virtual cc::utils::Result<cc::models::Food> getByBarcode(const std::string& barcode) = 0;
+  virtual cc::utils::Result<cc::models::Food> getById_or_Barcode(const std::string& id) = 0;
   virtual cc::utils::Result<std::vector<cc::models::Food>> list(int offset = 0, int limit = 50) = 0;
   virtual cc::utils::Result<void> remove(const std::string& id) = 0;
 

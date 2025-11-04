@@ -5,7 +5,7 @@ namespace cc::storage
   JsonFoodRepository::JsonFoodRepository(std::string filePath) : filePath_{filePath} {}
   cc::utils::Result<void> JsonFoodRepository::save(const cc::models::Food &food)
   {
-    // std::lock_guard<std::mutex> lock(this->mtx_);
+    std::lock_guard<std::mutex> lock(this->mtx_);
     std::ifstream infile(filePath_);
     nlohmann::json file_content;
     if (infile.is_open() && infile.peek() != std::ifstream::traits_type::eof())
@@ -35,6 +35,8 @@ namespace cc::storage
 
   cc::utils::Result<cc::models::Food> JsonFoodRepository::getById_or_Barcode(const std::string &id)
   {
+
+    std::lock_guard<std::mutex> lock(this->mtx_);
     std::ifstream infile(this->filePath_);
     nlohmann::json file_content;
     if (infile.is_open() && infile.peek() != std::ifstream::traits_type::eof())

@@ -1,6 +1,8 @@
 #include "FoodService.hpp"
 #include "models/food.hpp"
-
+#include "utils/Result.hpp"
+#include <vector>
+    
 namespace cc
 {
     namespace services
@@ -29,13 +31,38 @@ namespace cc
                     return f;
                 }
             }
-            return cc::utils::Result<cc::models::Food>::ok(cc::models::Food{});
+            return cc::utils::Result<cc::models::Food>::fail(cc::utils::ErrorCode::NotFound,"Food not found");
         }
 
         // zed der les cas , bach thkam l program 
         cc::utils::Result<void> FoodService::addManualFood(const cc::models::Food &food){
-            this->repo_->save(food);
-            return cc::utils::Result<void>::ok();
+            cc::utils::Result<void> result = this->repo_->save(food);
+            // if true food is saved correctly
+            if(result){
+                return cc::utils::Result<void>::ok();
+            }else{
+                return cc::utils::Result<void>::fail(cc::utils::ErrorCode::StorageError, "can't add Manual Food");
+            }
         }
+        cc::utils::Result<void> FoodService::deleteFood(const std::string& id){
+                cc::utils::Result<void> result = this->repo_->remove(id);
+                if(result){
+                    return cc::utils::Result<void>::ok();
+                }else{
+                    return cc::utils::Result<void>::fail(cc::utils::ErrorCode::StorageError, "can't  remove Food with id "+id);
+                }
+             } 
+
+
+       cc::utils::Result<std::vector<cc::models::Food>> FoodService::listFoods(int offset , int limit ){
+                cc::utils::Result<std::vector<cc::models::Food>> result = this->repo_->list(offset,limit);
+                if(result){
+                    return  result;
+                }else{
+                    return  cc::utils::Result<std::vector<cc::models::Food>>::fail(cc::utils::ErrorCode::NotFound, "data base is empty , or can't access is forbiden ");
+                }
+
+
+       }
     } // namespace services
 } // namespace cc

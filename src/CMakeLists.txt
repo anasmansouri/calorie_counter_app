@@ -53,8 +53,19 @@ add_library(cc_api
 target_include_directories(cc_api PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(cc_api PUBLIC cc_services cc_utils)
 
+# Crow 
+include(FetchContent)
+FetchContent_Declare(
+  crow
+  GIT_REPOSITORY https://github.com/CrowCpp/Crow.git
+)
+FetchContent_MakeAvailable(crow)
+
+target_link_libraries(cc_api PUBLIC pthread)
+
 # Main executable
 add_executable(cc_app main.cpp)
 #target_link_libraries(cc_app PRIVATE cc_api ${CURL_LIBRARIES})
+target_link_libraries(cc_app PRIVATE Crow::Crow)
 target_link_libraries(cc_app PRIVATE cc_api)
 #target_link_libraries(cc_app PRIVATE cc_models)
