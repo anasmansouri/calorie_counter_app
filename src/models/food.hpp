@@ -69,7 +69,7 @@ namespace cc::models
         std::optional<double> servingSizeG_;
         std::optional<std::string> barcode_;
         std::optional<std::string> brand_;
-        std::optional<std::string> imageUrl_;
+        std::optional<std::string> imageUrl_{"img_url_empty"};
         std::string source_{"manual"};
     }; // Food
     inline void to_json(nlohmann::json &j, const cc::models::Food &f)

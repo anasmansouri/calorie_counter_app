@@ -67,12 +67,9 @@ namespace cc::storage
       infile >> file_content;
       infile.close();
       std::vector<cc::models::Food> food_vector;
-      for (int i = 0; i < file_content.size(); i++)
+      for (int i = offset; i < file_content.size() && i<=limit; i++)
       {
-        if (i >= offset && food_vector.size() <= limit)
-        {
           food_vector.push_back(cc::models::Food(file_content[i]));
-        }
       }
       return cc::utils::Result<std::vector<cc::models::Food>>::ok(food_vector);
     }

@@ -2,6 +2,9 @@
 #include <memory>
 #include <cstdint>
 
+#include <crow.h>
+#include "services/FoodService.hpp"
+#include "utils/Json_utils.hpp"
 namespace cc::services { class FoodService; }
 namespace cc::services { class AuthService; }
 

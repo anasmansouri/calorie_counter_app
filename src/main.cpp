@@ -2,6 +2,7 @@
 #include "models/meal_log.hpp"
 #include "models/nutrient.hpp"
 #include <iostream>
+#include <memory>
 #include <optional>
 #include <ostream>
 #include <string>
@@ -15,7 +16,7 @@
 #include "utils/HttpClient.hpp"
 #include "clients/OpenFoodFactsClient.hpp"
 #include "services/FoodService.hpp"
-#include <crow.h>
+#include <api/Server.hpp>
 int main()
 {
     // TODO: load config, init services, run server
@@ -132,157 +133,155 @@ int main()
     /// ##############################
     ///
 
-    // std::string barcode{"737628064502"};
     // perly
+    std::string barcode{"8076809543934"};
+    // 6111242100985
     // std::string barcode{"8076809543934"};
-    // // 6111242100985
-    // // std::string barcode{"8076809543934"};
-    // std::cout << "#########################" << std::endl;
-    // std::cout << "TEST barcode" << std::endl;
-    // std::cout << "#########################" << std::endl;
-    // cc::clients::OpenFoodFactsClient openfoodfactsclient{};
-    // auto result_barcode = openfoodfactsclient.getByBarcode(barcode);
+    std::cout << "#########################" << std::endl;
+    std::cout << "TEST barcode" << std::endl;
+    std::cout << "#########################" << std::endl;
+    cc::clients::OpenFoodFactsClient openfoodfactsclient{};
+    auto result_barcode = openfoodfactsclient.getByBarcode(barcode);
 
-    // cc::models::Food food_barcode;
-    // if (result_barcode)
-    // {
-        // food_barcode = result_barcode.unwrap();
-        // if (food_barcode.nutrients().empty())
-        // {
-            // std::cout << "nutrients is empty" << std::endl;
-        // }
-        // std::cout << food_barcode.name() << std::endl;
-        // for (auto n : food_barcode.nutrients())
-        // {
-            // std::cout << n.name() << " : " << n.value() << " " << n.unit() << std::endl;
-        // }
-    // }
+    cc::models::Food food_barcode;
+    if (result_barcode)
+    {
+        food_barcode = result_barcode.unwrap();
+        if (food_barcode.nutrients().empty())
+        {
+            std::cout << "nutrients is empty" << std::endl;
+        }
+        std::cout << food_barcode.name() << std::endl;
+        for (auto n : food_barcode.nutrients())
+        {
+            std::cout << n.name() << " : " << n.value() << " " << n.unit() << std::endl;
+        }
+    }
 
-    // std::string barcode_2{"5449000227041"};
-    // auto result_barcode_2 = openfoodfactsclient.getByBarcode(barcode_2);
-    // cc::models::Food food_barcode_2;
-    // if (result_barcode_2)
-    // {
-        // food_barcode_2 = result_barcode_2.unwrap();
-        // if (food_barcode_2.nutrients().empty())
-        // {
-            // std::cout << "nutrients is empty" << std::endl;
-        // }
-        // std::cout << food_barcode_2.name() << std::endl;
-        // for (auto n : food_barcode_2.nutrients())
-        // {
-            // std::cout << n.name() << " : " << n.value() << " " << n.unit() << std::endl;
-        // }
-    // }
+    std::string barcode_2{"5449000227041"};
+    auto result_barcode_2 = openfoodfactsclient.getByBarcode(barcode_2);
+    cc::models::Food food_barcode_2;
+    if (result_barcode_2)
+    {
+        food_barcode_2 = result_barcode_2.unwrap();
+        if (food_barcode_2.nutrients().empty())
+        {
+            std::cout << "nutrients is empty" << std::endl;
+        }
+        std::cout << food_barcode_2.name() << std::endl;
+        for (auto n : food_barcode_2.nutrients())
+        {
+            std::cout << n.name() << " : " << n.value() << " " << n.unit() << std::endl;
+        }
+    }
     // // ############ json save ####################################
 
-    // cc::storage::JsonFoodRepository jsonFoodRepository("/home/anas/personal_projects/calorie-counter-backend/json_data_base.json");
-    // jsonFoodRepository.save(food_barcode);
-    // jsonFoodRepository.save(food_barcode_2);
+    cc::storage::JsonFoodRepository jsonFoodRepository("/home/anas/personal_projects/calorie-counter-backend/json_data_base.json");
+    jsonFoodRepository.save(food_barcode);
+    jsonFoodRepository.save(food_barcode_2);
 
-    // // ############ get by id from data base(json for now ) ##########
-    // std::cout << "testing get by id from data base (json for now )" << std::endl;
-    // cc::utils::Result<cc::models::Food> founded_food = jsonFoodRepository.getById_or_Barcode("8076809543934");
-    // if (founded_food)
-    // {
-        // std::cout << founded_food.unwrap().to_string() << std::endl;
-    // }
-    // else
-    // {
-        // std::cout << founded_food.unwrap_error().message << std::endl;
-    // }
+    // ############ get by id from data base(json for now ) ##########
+     std::cout << "testing get by id from data base (json for now )" << std::endl;
+     cc::utils::Result<cc::models::Food> founded_food = jsonFoodRepository.getById_or_Barcode("8076809543934");
+     if (founded_food)
+     {
+     std::cout << founded_food.unwrap().to_string() << std::endl;
+     }
+     else
+     {
+     std::cout << founded_food.unwrap_error().message << std::endl;
+     }
 
-    // // ############ get by id from data base(json for now ) ##########
-    // std::cout << "testing get by barcode from data base (json for now )" << std::endl;
-    // founded_food = jsonFoodRepository.getById_or_Barcode("5449000227041");
-    // if (founded_food)
-    // {
-        // std::cout << founded_food.unwrap().to_string() << std::endl;
-    // }
-    // else
-    // {
-        // std::cout << founded_food.unwrap_error().message << std::endl;
-    // }
-    // // ############ list ##########
-    // std::cout << "testing listing food from database " << std::endl;
-    // cc::utils::Result<std::vector<cc::models::Food>> food_items;
-    // food_items = jsonFoodRepository.list(0, 40);
-    // if (food_items)
-    // {
-        // std::cout << "food items are found" << std::endl;
-        // for (auto item : food_items.unwrap())
-        // {
-            // std::cout << item.to_string() << std::endl;
-        // }
-    // }
-    // else
-    // {
-        // std::cout << founded_food.unwrap_error().message << std::endl;
-    // }
+    // ############ get by id from data base(json for now ) ##########
+    std::cout << "testing get by barcode from data base (json for now )" << std::endl;
+    founded_food = jsonFoodRepository.getById_or_Barcode("5449000227041");
+    if (founded_food)
+    {
+    std::cout << founded_food.unwrap().to_string() << std::endl;
+    }
+    else
+    {
+    std::cout << founded_food.unwrap_error().message << std::endl;
+    }
+    // ############ list ##########
+    std::cout << "testing listing food from database " << std::endl;
+    cc::utils::Result<std::vector<cc::models::Food>> food_items;
+    food_items = jsonFoodRepository.list(0, 40);
+    if (food_items)
+    {
+    std::cout << "food items are found" << std::endl;
+    for (auto item : food_items.unwrap())
+    {
+    std::cout << item.to_string() << std::endl;
+    }
+    }
+    else
+    {
+    std::cout << founded_food.unwrap_error().message << std::endl;
+    }
 
-    // // ############ get by id from data base(json for now ) ##########
-    // std::cout << "testing remove item from data base" << std::endl;
-    // cc::utils::Result<void> r = jsonFoodRepository.remove("5449000227041");
+    // ############ get by id from data base(json for now ) ##########
+    std::cout << "testing remove item from data base" << std::endl;
+    cc::utils::Result<void> r = jsonFoodRepository.remove("5449000227041");
 
-    // // ############ update or insert food item ##########
-    // std::cout << "testing update or insert" << std::endl;
-    // // // 2) Build a Food
-    // cc::models::Food f;
-    // f.setId("7622210449283");
-    // f.setName("Granola Bar");
-    // f.setBrand(std::string("FooBrand"));
-    // f.setBarcode(std::string("7622210449283"));
-    // f.setCaloriesPer100g(420.0);
-    // f.setServingSizeG(40.0); // default serving size 40g
-    // f.setSource("manual");
-    // f.setImageUrl(std::string("https://example.com/granola.jpg"));
-    // cc::utils::Result<void> r_update_insert = jsonFoodRepository.upsert(f);
-
-    // // ############ item Food Service ##########
-    // //
-    // // ############ getOrFetchByBarcode ##########
-    // std::cout << "testing getBy_id_or_Barcode" << std::endl;
-    // cc::utils::Result<cc::models::Food> returned_food;
-    // cc::services::FoodService f_service(std::make_shared<cc::storage::JsonFoodRepository>("/home/anas/personal_projects/calorie-counter-backend/json_data_base.json"), std::make_shared<cc::clients::OpenFoodFactsClient>());
-    // f_service.getOrFetchByBarcode("7622210449283");
-
-    // // ############ addManualFood ##########
+    // ############ update or insert food item ##########
+    std::cout << "testing update or insert" << std::endl;
     // // 2) Build a Food
+    cc::models::Food f;
+    f.setId("7622210449283");
+    f.setName("Granola Bar");
+    f.setBrand(std::string("FooBrand"));
+    f.setBarcode(std::string("7622210449283"));
+    f.setCaloriesPer100g(420.0);
+    f.setServingSizeG(40.0); // default serving size 40g
+    f.setSource("manual");
+    f.setImageUrl(std::string("https://example.com/granola.jpg"));
+    cc::utils::Result<void> r_update_insert = jsonFoodRepository.upsert(f);
 
-    // std::cout << "testing addManualFood" << std::endl;
-    // cc::models::Food new_food;
-    // new_food.setId("2131654967498");
-    // new_food.setName("minina");
-    // new_food.setBrand(std::string("wlad 3icha l3arbi"));
-    // new_food.setBarcode(std::string("2131654967498"));
-    // new_food.setCaloriesPer100g(420.0);
-    // new_food.setServingSizeG(40.0); // default serving size 40g
-    // new_food.setSource("manual");
-    // new_food.setImageUrl(std::string("https://example.com/granola.jpg"));
-    // f_service.addManualFood(new_food);
+    // ############ item Food Service ##########
+    //
+    // ############ getOrFetchByBarcode ##########
+    std::cout << "testing getBy_id_or_Barcode" << std::endl;
+    cc::utils::Result<cc::models::Food> returned_food;
+    cc::services::FoodService f_service(std::make_shared<cc::storage::JsonFoodRepository>("/home/anas/personal_projects/calorie-counter-backend/json_data_base.json"), std::make_shared<cc::clients::OpenFoodFactsClient>());
+    f_service.getOrFetchByBarcode("7622210449283");
 
-    // // ############ deleteFood ##########
-    // std::cout << "testing deleteFood" << std::endl;
-    // f_service.deleteFood(new_food.id());
+    // ############ addManualFood ##########
+    // 2) Build a Food
 
-    // // ############ listFood ##########
-    // std::cout << "list  Food" << std::endl;
-    
-    // cc::utils::Result<std::vector<cc::models::Food>> food_items_2;
-    // food_items_2 = f_service.listFoods();;
-    // if (food_items_2)
-    // {
-        // std::cout << "food items are found" << std::endl;
-        // for (auto item : food_items_2.unwrap())
-        // {
-            // std::cout << item.to_string() << std::endl;
-        // }
-    // }
-    // else
-    // {
-        // std::cout << founded_food.unwrap_error().message << std::endl;
-    // }
+    std::cout << "testing addManualFood" << std::endl;
+    cc::models::Food new_food;
+    new_food.setId("2131654967498");
+    new_food.setName("minina");
+    new_food.setBrand(std::string("wlad 3icha l3arbi"));
+    new_food.setBarcode(std::string("2131654967498"));
+    new_food.setCaloriesPer100g(420.0);
+    new_food.setServingSizeG(40.0); // default serving size 40g
+    new_food.setSource("manual");
+    new_food.setImageUrl(std::string("https://example.com/granola.jpg"));
+    f_service.addManualFood(new_food);
 
+    // ############ deleteFood ##########
+    std::cout << "testing deleteFood" << std::endl;
+    f_service.deleteFood(new_food.id());
+
+    // ############ listFood ##########
+    std::cout << "list  Food" << std::endl;
+
+    cc::utils::Result<std::vector<cc::models::Food>> food_items_2;
+    food_items_2 = f_service.listFoods();;
+    if (food_items_2)
+    {
+    std::cout << "food items are found" << std::endl;
+    for (auto item : food_items_2.unwrap())
+    {
+    std::cout << item.to_string() << std::endl;
+    }
+    }
+    else
+    {
+    std::cout << founded_food.unwrap_error().message << std::endl;
+    }
 
     // ############ clear ##########
     // std::cout << "testing clear database " << std::endl;
@@ -326,6 +325,7 @@ int main()
     // auto r4 = cc::utils::Result<void>::fail(cc::utils::ErrorCode::StorageError, "disk full");
     //////////////////////////////////////////////////////////////////
 
+    /*
     crow::SimpleApp app;
 
     CROW_ROUTE(app, "/")([](){
@@ -339,6 +339,9 @@ int main()
     });
 
     app.port(8080).multithreaded().run();
+    */
 
+    cc::api::Server s(8080, std::make_shared<cc::services::FoodService>(f_service));
+    s.run();
     return 0;
 }

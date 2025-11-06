@@ -2,7 +2,7 @@
 add_library(cc_utils
     utils/Result.hpp utils/Result.cpp
     utils/HttpClient.hpp utils/HttpClient.cpp
-    utils/Json.hpp
+    utils/Json_utils.hpp utils/Json_utils.cpp
 )
 target_include_directories(cc_utils PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 
@@ -58,14 +58,18 @@ include(FetchContent)
 FetchContent_Declare(
   crow
   GIT_REPOSITORY https://github.com/CrowCpp/Crow.git
+  GIT_TAG v1.2.0           # pin a tag or commit
+  GIT_SHALLOW TRUE         # shallow clone (smaller)
+  GIT_PROGRESS TRUE
+  UPDATE_DISCONNECTED TRUE # don’t auto-update once downloaded
 )
 FetchContent_MakeAvailable(crow)
-
-target_link_libraries(cc_api PUBLIC pthread)
+find_package(Threads REQUIRED)
 
 # Main executable
 add_executable(cc_app main.cpp)
 #target_link_libraries(cc_app PRIVATE cc_api ${CURL_LIBRARIES})
 target_link_libraries(cc_app PRIVATE Crow::Crow)
 target_link_libraries(cc_app PRIVATE cc_api)
+target_link_libraries(cc_app PRIVATE Threads::Threads)
 #target_link_libraries(cc_app PRIVATE cc_models)

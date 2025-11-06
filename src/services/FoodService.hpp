@@ -20,6 +20,7 @@ public:
   cc::utils::Result<cc::models::Food> getOrFetchByBarcode(const std::string& barcode);
 
   cc::utils::Result<void> addManualFood(const  cc::models::Food &food);
+  cc::utils::Result<void> updateFood(const  cc::models::Food &food);
   cc::utils::Result<void> deleteFood(const std::string& id);
   cc::utils::Result<std::vector<cc::models::Food>> listFoods(int offset = 0, int limit = 50);
 
