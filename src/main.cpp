@@ -283,6 +283,29 @@ int main()
     std::cout << founded_food.unwrap_error().message << std::endl;
     }
 
+
+    // ############ deleteFood ##########
+    cc::models::MealLog breakfast(cc::models::MEALNAME::Breakfast);
+    breakfast.addFoodItem(new_food.id(),100);
+
+    // ############ Meal ##########
+    // 2) Build a Meal
+
+    std::cout << "creating new meal" << std::endl;
+    cc::models::MealLog new_meal(cc::models::MEALNAME::Breakfast);
+    cc::models::Food minina;
+    minina.setId("2131654967498");
+    minina.setName("minina");
+    minina.setBrand(std::string("wlad 3icha l3arbi"));
+    minina.setBarcode(std::string("2131654967498"));
+    minina.setCaloriesPer100g(420.0);
+    minina.setServingSizeG(40.0); // default serving size 40g
+    minina.setSource("manual");
+    minina.setImageUrl(std::string("https://example.com/granola.jpg"));
+    new_meal.addFoodItem(new_food.id(),100);
+    
+
+
     // ############ clear ##########
     // std::cout << "testing clear database " << std::endl;
     // r = jsonFoodRepository.clear();
@@ -341,7 +364,7 @@ int main()
     app.port(8080).multithreaded().run();
     */
 
-    cc::api::Server s(8080, std::make_shared<cc::services::FoodService>(f_service));
-    s.run();
+// cc::api::Server s(8080, std::make_shared<cc::services::FoodService>(f_service));
+// s.run();
     return 0;
 }

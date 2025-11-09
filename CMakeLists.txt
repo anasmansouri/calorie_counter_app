@@ -1,8 +1,19 @@
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.20)
 project(calorie_counter_backend LANGUAGES CXX)
 
+option(ENABLE_COVERAGE "Enable code coverage" OFF)
+
+if(ENABLE_COVERAGE)
+    if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+        message(STATUS "Building with coverage instrumentation")
+        add_compile_options(--coverage -O0 -g)
+        add_link_options(--coverage)
+    else()
+        message(WARNING "Coverage only supported with GCC/Clang")
+    endif()
+endif()
 # Set C++ version
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Compiler warnings (good for dev)
@@ -31,7 +42,11 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 
 # Add subdirectories
 add_subdirectory(src)
+# Only enable tests when requested
 if (BUILD_TESTS)
-    enable_testing()
-    add_subdirectory(tests)
+  include(CTest)
+  enable_testing()
+  add_subdirectory(tests)
 endif()
+
+
