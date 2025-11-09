@@ -32,6 +32,7 @@ target_link_libraries(cc_clients PRIVATE cc_utils)
 add_library(cc_storage
     storage/FoodRepository.hpp
     storage/JsonFoodRepository.cpp storage/JsonFoodRepository.hpp
+    storage/JsonMealRepository.cpp storage/JsonMealRepository.hpp
     storage/SqliteFoodRepository.cpp storage/SqliteFoodRepository.hpp
 )
 target_include_directories(cc_storage PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
@@ -52,12 +53,6 @@ add_library(cc_api
 )
 target_include_directories(cc_api PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(cc_api PUBLIC cc_services cc_utils)
-#to be removed after########
-add_library(cc_temp
-    temp/math.cpp temp/math.hpp
-)
-target_include_directories(cc_temp PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
-target_link_libraries(cc_temp PUBLIC cc_storage cc_clients cc_models cc_utils cc_api)
 #######################
 
 

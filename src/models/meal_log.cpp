@@ -1,6 +1,8 @@
 #pragma once
 #include "models/meal_log.hpp"
 #include "models/food.hpp"
+#include <bits/chrono.h>
+#include <chrono>
 #include <string>
 #include <vector>
 #include <utility>
@@ -11,7 +13,7 @@ namespace cc::models
 
     MealLog::MealLog(MEALNAME name) : name_{name}
     {
-        this->id_tsUtc_ = std::chrono::system_clock::now();
+        this->tsUtc_ = std::chrono::system_clock::now();
     }
     MEALNAME MealLog::getName() const
     {
@@ -31,21 +33,27 @@ namespace cc::models
         }
         return sum;
     }
-    std::chrono::system_clock::time_point MealLog::id() const
+    std::string MealLog::id() const
     {
-        return this->id_tsUtc_;
+        return this->id_;
     }
 
-    void MealLog::setId(std::chrono::system_clock::time_point id_tsUtc_){
-        this->id_tsUtc_ = id_tsUtc_;
+
+    std::chrono::system_clock::time_point MealLog::gettime() const{
+        return this->tsUtc_;
     }
+
+    void MealLog::setId(std::string id){
+        this->id_ = id;
+    }
+    
+    void MealLog::setTime(std::chrono::system_clock::time_point tsUtc){
+        this->tsUtc_ = std::chrono::floor<std::chrono::seconds>(tsUtc);
+    }
+
     void MealLog::setFoodItems(std::vector<std::pair<std::string, double>> food_items)
     {
         this->food_items_ = food_items;
-        for (auto food_item : this->food_items_)
-        {
-            //
-        }
     }
 
     std::vector<std::pair<std::string, double>> MealLog::food_items() const

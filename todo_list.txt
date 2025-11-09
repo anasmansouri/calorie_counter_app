@@ -1,1 +1,0 @@
-- getByid () in jsonFoodRepository has problem to get food , i think there is a problem parsing the content of the file to a json objekt , wo when i try to look for my item there it it doesn't work 

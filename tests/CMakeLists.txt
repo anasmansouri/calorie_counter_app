@@ -12,7 +12,8 @@ FetchContent_MakeAvailable(googletest)
 
 find_package(Threads REQUIRED)
 
-add_executable(cc_test_models test_models.cpp)
+#add_executable(cc_test_models test_models.cpp test_JsonMealRepository.cpp)
+add_executable(cc_test_models  test_models.cpp test_JsonMealRepository.cpp)
 
 target_link_libraries(cc_test_models PRIVATE
   cc_utils

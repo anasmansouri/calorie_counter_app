@@ -1,5 +1,6 @@
 #pragma once
 #include "models/food.hpp"
+#include <chrono>
 #include <iostream>
 #include <string>
 #include <vector>
@@ -21,7 +22,8 @@ namespace cc::models
   class MealLog
   {
   private:
-    std::chrono::system_clock::time_point id_tsUtc_;
+    std::chrono::system_clock::time_point tsUtc_;
+    std::string id_;
     MEALNAME name_{MEALNAME::Lunch};
     std::vector<std::pair<std::string, double>> food_items_; // foodId, grams
     double totalKcal_{0};
@@ -35,15 +37,17 @@ namespace cc::models
 
     // setters
     void setName(MEALNAME name);
-    void setId(std::chrono::system_clock::time_point id_tsUtc_);
+    void setId(std::string id);
+    void setTime(std::chrono::system_clock::time_point tsUtc);
+    void setFoodItems(std::vector<std::pair<std::string, double>> food_items);
     // void setTotalKcal(double kcal){
     // this->totalKcal_=kcal;
     // }
     
     // getters
     MEALNAME getName() const;
-    void setFoodItems(std::vector<std::pair<std::string, double>> food_items);
-    std::chrono::system_clock::time_point id() const;
+    std::string id() const;
+    std::chrono::system_clock::time_point gettime() const;
     double totalKcal() const;
     std::vector<std::pair<std::string, double>> food_items() const;
     // operations
@@ -54,15 +58,17 @@ namespace cc::models
   {
     j = {
         {"name", m.getName()},
+        {"id", m.id()},
         {
             "foodItems",
             m.food_items(),
         },
-        {"id", cc::utils::toIso8601(m.id())}};
+        {"tsUtc", cc::utils::toIso8601(m.gettime())}};
   }
   inline void from_json(const nlohmann::json &j, cc::models::MealLog &m)
   {
     m.setId(m.id());
+    m.setTime(m.gettime());
     m.setName(j.at("name").get<MEALNAME>());
     // m.setTotalKcal(j.at("totalKcal").get<double>());
     m.setFoodItems(j.at("foodItems").get<std::vector<std::pair<std::string, double>>>());
